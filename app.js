@@ -73,12 +73,12 @@ passport.deserializeUser(User.deserializeUser());
 app.use(function(req, res, next) {
 	// set default user (to use until development is done)
 	// req.user = {
-	// 	// _id      : '5f2937badab11320a4e870dd',
-	// 	// username : 'ivan'
-	// 	// _id      : '5f2940f8a640d42834f47575',
-	// 	// username : 'ivan2'
-	// 	_id      : '5f29641ed01fb72a18fcd099',
-	// 	username : 'ivan3'
+	// 	_id      : '5f2937badab11320a4e870dd',
+	// 	username : 'ivan'
+	// 	// 	// _id      : '5f2940f8a640d42834f47575',
+	// 	// 	// username : 'ivan2'
+	// 	// 	_id      : '5f29641ed01fb72a18fcd099',
+	// 	// 	username : 'ivan3'
 	// };
 	res.locals.currentUser = req.user;
 

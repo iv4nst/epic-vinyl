@@ -26,8 +26,7 @@ a {
 }
 
 .color-green {
-    color: green;
-    
+	color: green;
 }
 
 .color-red {
@@ -37,4 +36,7 @@ a {
 .profile-image {
 	width: 100px;
 	border-radius: 50%;
+}
+
+.login-form {
 }

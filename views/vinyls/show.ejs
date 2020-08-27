@@ -76,11 +76,11 @@
 	<h3>Reviews</h3>
 	<!-- display all reviews -->
 	<% vinyl.reviews.forEach(function(review) { %>
-	<div>
-		Author: <%= review.author.username %><br>
-		<%= review.body %><br>
-		Rating: <%= review.rating %>
-	</div>
+    <div>
+        Author: <%= review.author.username %><br>
+        <%= review.body %><br>
+        Rating: <%= review.rating %>
+    </div>
 
 	<% if(currentUser && review.author.equals(currentUser._id)) { %>
 	<!-- provera da li je korisnik autor ocene -->

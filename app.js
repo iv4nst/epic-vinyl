@@ -3,15 +3,19 @@ require('dotenv').config();
 const express = require('express');
 const engine = require('ejs-mate');
 const path = require('path');
-const favicon = require('serve-favicon')
+const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
-const User = require('./models/user')
+const User = require('./models/user');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const createError = require('http-errors');
+
+// seed the data
+// const seedPosts = require('./seeds');
+// seedPosts();
 
 // require routes
 const indexRoutes = require('./routes/index');
@@ -61,13 +65,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(User.createStrategy())
-passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser())
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // set local variables middleware
-app.use(function(req,res,next){
-    // set default user (to use until development is done)
+app.use(function(req, res, next) {
+	// set default user (to use until development is done)
 	// req.user = {
 	// 	// _id      : '5f2937badab11320a4e870dd',
 	// 	// username : 'ivan'
@@ -91,7 +95,7 @@ app.use(function(req,res,next){
 
 	// continue on to next function in middleware chain
 	next();
-})
+});
 
 // mount routes
 app.use('/', indexRoutes);

@@ -1,1 +1,36 @@
-<h1>Vinyl index</h1>
+<% layout('layouts/vinylsIndex') -%>
+
+<div class="container-fluid p-5">
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Vinyls Index!</h1>
+		</div>
+		<div class="col-4">
+			<% include ../partials/searchFilter %>
+		</div>
+		<div class="col-8">
+			<div id="map"></div>
+		</div>
+	</div>
+
+	<% include ../partials/paginateVinyls %>
+
+	<% vinyls.docs.forEach(function(vinyl) { %>
+	<div>
+		<h2><%= vinyl.title %></h2>
+		<div>Price: <%= vinyl.price %></div>
+		<div><%= vinyl.description %></div>
+		<div><%= vinyl.location %></div>
+		<div><a href="/vinyls/<%= vinyl.id %>">View more</a></div>
+	</div>
+	<% }); %>
+
+	<% include ../partials/paginateVinyls %>
+
+</div> <!-- /.container-fluid -->
+
+<script>
+	mapboxgl.accessToken = "<%= mapBoxToken %>";
+	var vinyls = { features: <%- JSON.stringify(vinyls.docs) %> };
+</script>
+<script src="/javascripts/allVinylsClusterMap.js"></script>

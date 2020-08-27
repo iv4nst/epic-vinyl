@@ -1,0 +1,26 @@
+<% layout('layouts/boilerplate') -%>
+
+<h1>Edit Vinyl!</h1>
+
+<form action="/vinyls/<%= vinyl.id %>?_method=PUT" method="POST" id="vinylEditForm" enctype="multipart/form-data">
+	<div><input type="text" name="vinyl[title]" placeholder="Title" value="<%= vinyl.title  %>"></div>
+	<div><input type="number" name="vinyl[price]" step=".01" placeholder="Price" value="<%= vinyl.price  %>"></div>
+	<div>
+		<input type="file" id="imageUpload" accept="images/*" name="images" multiple />
+		<div>
+		<% vinyl.images.forEach(function(image, i) { %>
+			<img src="<%= image.url %>" width="100px" />
+			<label for="image<%= i %>">Delete?</label>
+			<input type="checkbox" name="deleteImages[]" class="imageDeleteCheckbox" id="image<%= i %>" value="<%= image.public_id %>">
+		<% }); %>
+		</div>
+	</div>
+	<div>
+		<textarea name="vinyl[description]" placeholder="Description"><%= vinyl.description  %></textarea>
+	</div>
+	<div><input type="text" name="vinyl[location]" placeholder="Location" value="<%= vinyl.location  %>"></div>
+
+	<input type="submit">
+</form>
+
+<script src="/javascripts/vinyl-edit.js"></script>

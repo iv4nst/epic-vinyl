@@ -12,14 +12,14 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 module.exports = {
 	// GET /
-	// async landingPage(req, res, next) {
-	// 	const vinyls = await Vinyl.find({}).sort('-_id').exec();
-	// 	const recentVinyls = vinyls.slice(0, 3);
-	// 	res.render('index', { vinyls, mapBoxToken, recentVinyls, title: 'Epic-Vinyl - Home' });
-	// },
 	async landingPage(req, res, next) {
-		res.render('landing');
+		const vinyls = await Vinyl.find({}).sort('-_id').exec();
+		const recentVinyls = vinyls.slice(0, 3);
+		res.render('index', { vinyls, mapBoxToken, recentVinyls, title: 'Epic-Vinyl - Home' });
 	},
+	// async landingPage(req, res, next) {
+	// 	res.render('landing');
+	// },
 
 	// GET /register
 	getRegister(req, res, next) {

@@ -1,0 +1,15 @@
+<% layout('layouts/boilerplate') -%>
+
+<h1>New Vinyl!</h1>
+
+<form action="/vinyls" method="POST" enctype="multipart/form-data">
+	<div><input type="text" name="vinyl[title]" placeholder="Title"></div>
+	<div><input type="number" name="vinyl[price]" step=".01" placeholder="Price"></div>
+	<div>
+		<input type="file" accept="images/*" name="images" multiple />
+	</div>
+	<div><textarea name="vinyl[description]" placeholder="Description"></textarea></div>
+	<div><input type="text" name="vinyl[location]" placeholder="Location"></div>
+
+	<input type="submit">
+</form>

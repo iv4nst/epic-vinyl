@@ -1,0 +1,68 @@
+.logo {
+	color: #fff;
+}
+
+.logo:hover {
+	color: #fff;
+}
+
+#map {
+	width: 350px;
+	height: 200px;
+}
+
+.marker {
+	background-image: url('/images/mapbox-icon.png');
+	background-size: cover;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.mapboxgl-popup {
+	max-width: 200px;
+}
+
+.mapboxgl-popup-content {
+	text-align: center;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.edit-review-form {
+	display: none;
+}
+
+.clear-rating {
+	display: block;
+}
+
+.static-slider-head {
+	min-height: 90px;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	overflow: auto;
+	background-size: cover;
+	background-position: center center;
+}
+.static-slider-head .title {
+	color: #ffffff;
+	font-weight: 700;
+	font-size: 70px;
+	line-height: 100px;
+}
+.static-slider-head .subtitle {
+	color: #ffffff;
+	line-height: 30px;
+}

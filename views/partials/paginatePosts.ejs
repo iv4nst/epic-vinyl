@@ -1,0 +1,17 @@
+<div style="margin: 20px 0;">
+
+	<% if(vinyls.page - 1) { %>
+		<a href="<%= paginateUrl %><%= vinyls.page - 1 %>">Prev</a>
+	<% } %>
+
+	<% if (vinyls.pages > 1 && vinyls.docs.length) { %>
+
+	<% for(let i = 1; i <= vinyls.pages; i++) { %>
+		<a href="<%= paginateUrl %><%= i %>" <%= i === vinyls.page ? 'style=color:#000;' : '' %>><%= i %></a>
+	<% } %>
+	<% } %>
+
+	<% if((vinyls.page + 1) <= vinyls.pages) { %>
+		<a href="<%= paginateUrl %><%= vinyls.page + 1 %>">Next</a>
+	<% } %>
+</div>

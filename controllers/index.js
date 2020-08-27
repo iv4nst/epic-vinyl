@@ -35,11 +35,11 @@ module.exports = {
 				const { secure_url, public_id } = req.file;
 				req.body.image = { secure_url, public_id };
 			}
-			const user = await User.register(new User(req.body), req.password);
+			const user = await User.register(new User(req.body), req.body.password);
 			req.login(user, function(err) {
 				if (err) return next(err);
 				req.session.success = `Welcome to Epic-Vinyl, ${user.username}!`;
-				req.redirect('/');
+				res.redirect('/');
 			});
 		} catch (err) {
 			deleteProfileImage(req);
@@ -49,7 +49,7 @@ module.exports = {
 			if (error.includes('duplicate') && error.includes('index: email_1 dup key')) {
 				error = 'A user with the given email is already registered';
 			}
-			req.render('register', { title: 'Register', username, email, error });
+			res.render('register', { title: 'Register', username, email, error });
 		}
 	},
 

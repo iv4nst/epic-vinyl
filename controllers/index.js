@@ -15,11 +15,8 @@ module.exports = {
 	async landingPage(req, res, next) {
 		const vinyls = await Vinyl.find({}).sort('-_id').exec();
 		const recentVinyls = vinyls.slice(0, 3);
-		res.render('index', { vinyls, mapBoxToken, recentVinyls, title: 'Epic-Vinyl - Home' });
+		res.render('index', { vinyls, mapBoxToken, recentVinyls, title: 'Epic Vinyl - Home' });
 	},
-	// async landingPage(req, res, next) {
-	// 	res.render('landing');
-	// },
 
 	// GET /register
 	getRegister(req, res, next) {
@@ -38,7 +35,7 @@ module.exports = {
 			const user = await User.register(new User(req.body), req.body.password);
 			req.login(user, function(err) {
 				if (err) return next(err);
-				req.session.success = `Welcome to Epic-Vinyl, ${user.username}!`;
+				req.session.success = `Welcome to Surf Shop, ${user.username}!`;
 				res.redirect('/');
 			});
 		} catch (err) {
@@ -69,14 +66,14 @@ module.exports = {
 		// vraca funkciju, i odmah je pozivamo i prosledjujemo username i password, i daje nam ili user objekat ili error
 		const { user, error } = await User.authenticate()(username, password);
 		// ako nema korisnika i ima greske, vraca gresku
-		if (!user && error) return next(error);
+		if (!user && error) return next(error.message); // error
 		// ako ima korisnika, uloguj ga i napravi sesiju za njega
 		req.login(user, function(err) {
 			// ako dodje do greske, vraca gresku
 			if (err) return next(err);
 
 			// u suprotnom ovo ostalo:
-			req.session.success = `Welcome to Epic-Vinyl, ${username}`;
+			req.session.success = `Welcome back, ${username}!`;
 			// req.session.redirectTo -> cuva req.originalUrl
 			// vise nemamo pristup req.originalUrl, ali sesija ostaje dok je ne izbrisemo
 			// ovde izvlacimo redirectTo iz sesije i dodeljujemo je novoj promenljivoj
@@ -152,8 +149,8 @@ module.exports = {
 
 		const msg = {
 			to      : email,
-			from    : 'Epic-Vinyl Admin <your@email.com>',
-			subject : 'Epic-Vinyl - Forgot Password / Reset',
+			from    : 'Surf Shop Admin <your@email.com>',
+			subject : 'Surf Shop - Forgot Password / Reset',
 			text    : `You are receiving this because you (or someone else)
 			have requested the reset of the password for your account.
 			Please click on the following link, or copy and paste it
@@ -212,8 +209,8 @@ module.exports = {
 
 		const msg = {
 			to      : user.email,
-			from    : 'Epic-Vinyl Admin <your@email.com>',
-			subject : 'Epic-Vinyl - Password Changed',
+			from    : 'Surf Shop Admin <your@email.com>',
+			subject : 'Surf Shop - Password Changed',
 			text    : `Hello,
 			This email is to confirm that the password for your account has just been changed.
 			If you did not make this change, please hit reply and notify us at once.`.replace(/			/g, '')

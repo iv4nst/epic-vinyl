@@ -19,22 +19,22 @@ const {
 } = require('../controllers');
 const { asyncErrorHandler, isLoggedIn, isValidPassword, changePassword } = require('../middleware');
 
-// GET home/landing page
+/* GET home/landing page. */
 router.get('/', asyncErrorHandler(landingPage));
 
-// GET /register
+/* GET /register */
 router.get('/register', getRegister);
 
-// POST /register
+/* POST /register */
 router.post('/register', upload.single('image'), asyncErrorHandler(postRegister));
 
-// GET /login
+/* GET /login */
 router.get('/login', getLogin);
 
-// POST /login
+/* POST /login */
 router.post('/login', asyncErrorHandler(postLogin));
 
-// GET /logout
+/* GET /logout */
 router.get('/logout', getLogout);
 
 /* GET /profile */

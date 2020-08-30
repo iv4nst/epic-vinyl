@@ -11,19 +11,19 @@ const User = require('./models/user');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
-const createError = require('http-errors');
 
 // seed the data
-// const seedPosts = require('./seeds');
-// seedPosts();
+// const seedVinyls = require('./seeds');
+// seedVinyls();
 
 // require routes
-const indexRoutes = require('./routes/index');
-const vinylRoutes = require('./routes/vinyls');
-const reviewsRoutes = require('./routes/reviews');
+const index = require('./routes/index');
+const vinyls = require('./routes/vinyls');
+const reviews = require('./routes/reviews');
 
 const app = express();
 
+// connect to the database
 mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/epic-vinyl', {
 	useNewUrlParser    : true,
 	useCreateIndex     : true,
@@ -32,7 +32,7 @@ mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/epic-viny
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-	console.log('Connected to DB!');
+	console.log("we're connected!");
 });
 
 // use ejs-locals for all ejs templates:
@@ -51,17 +51,18 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
-// add moment to every view
+// Add moment to every view
 app.locals.moment = require('moment');
 
-// configure passport and sessions
+// Configure Passport and Sessions
 app.use(
 	session({
-		secret            : 'Secret message.',
+		secret            : 'Secret message!',
 		resave            : false,
 		saveUninitialized : true
 	})
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -73,17 +74,17 @@ passport.deserializeUser(User.deserializeUser());
 app.use(function(req, res, next) {
 	// set default user (to use until development is done)
 	// req.user = {
-	// 	_id      : '5f2937badab11320a4e870dd',
-	// 	username : 'ivan'
-	// 	// 	// _id      : '5f2940f8a640d42834f47575',
-	// 	// 	// username : 'ivan2'
-	// 	// 	_id      : '5f29641ed01fb72a18fcd099',
-	// 	// 	username : 'ivan3'
+	// 	// _id      : '5f2937badab11320a4e870dd',
+	// 	// username : 'ivan'
+	// 	// _id      : '5f2940f8a640d42834f47575',
+	// 	// username : 'ivan2'
+	// 	_id      : '5f29641ed01fb72a18fcd099',
+	// 	username : 'ivan3'
 	// };
 	res.locals.currentUser = req.user;
 
 	// set default page title
-	res.locals.title = 'Epic-Vinyl';
+	res.locals.title = 'Epic Vinyl';
 
 	// set success flash message
 	res.locals.success = req.session.success || '';
@@ -97,17 +98,16 @@ app.use(function(req, res, next) {
 	next();
 });
 
-// mount routes
-app.use('/', indexRoutes);
-app.use('/vinyls', vinylRoutes);
-app.use('/vinyls/:id/reviews', reviewsRoutes);
+// Mount routes
+app.use('/', index);
+app.use('/vinyls', vinyls);
+app.use('/vinyls/:id/reviews', reviews);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-	const err = new Error('Not found');
+	const err = new Error('Not Found');
 	err.status = 404;
 	next(err);
-	// next(createError(404));
 });
 
 // error handler

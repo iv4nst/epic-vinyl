@@ -28,14 +28,12 @@ module.exports = {
 		req.session.success = 'Review created successfully!';
 		res.redirect(`/vinyls/${vinyl.id}`);
 	},
-
 	// Reviews Update
 	async reviewUpdate(req, res, next) {
 		await Review.findByIdAndUpdate(req.params.review_id, req.body.review);
 		req.session.success = 'Review updated successfully!';
 		res.redirect(`/vinyls/${req.params.id}`);
 	},
-
 	// Reviews Destroy
 	async reviewDestroy(req, res, next) {
 		await Vinyl.findByIdAndUpdate(req.params.id, {

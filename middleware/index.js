@@ -2,13 +2,13 @@ const Review = require('../models/review');
 const User = require('../models/user');
 const Vinyl = require('../models/vinyl');
 const { cloudinary } = require('../cloudinary');
-// const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
-// const mapBoxToken = process.env.MAPBOX_TOKEN;
-// const geocodingClient = mbxGeocoding({ accessToken: mapBoxToken });
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: mapBoxToken });
 
-// function escapeRegExp(string) {
-// 	return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
-// }
+function escapeRegExp(string) {
+	return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
 
 const middleware = {
 	asyncErrorHandler    : (fn) => (req, res, next) => {
@@ -20,7 +20,7 @@ const middleware = {
 		if (review.author.equals(req.user._id)) {
 			return next(); // ne mora da se koristi else ako se stavi return
 		}
-		// u suprotnom
+		// u suprotnom:
 		req.session.error = 'Bye bye';
 		return res.redirect('/');
 	},
@@ -28,7 +28,7 @@ const middleware = {
 	isLoggedIn           : (req, res, next) => {
 		if (req.isAuthenticated()) return next();
 		req.session.error = 'You need to be logged in to do that!';
-		req.session.redirectTo = req.originalUrl; // npr. odemo na posts/new i moramo da se ulogujemo, nakon logovanja ostajemo na posts/new
+		req.session.redirectTo = req.originalUrl; // npr. odemo na vinyls/new i moramo da se ulogujemo, nakon logovanja ostajemo na vinyls/new
 		res.redirect('/login');
 	},
 
@@ -37,8 +37,8 @@ const middleware = {
 		const vinyl = await Vinyl.findById(req.params.id);
 		// check if the id of the auther is equal to the currently logged in user
 		if (vinyl.author.equals(req.user._id)) {
-			// if it is, pass the post that we found on to the next middleware function
-			res.locals.vinyl = vinyl; // salje se ne samo sledecoj funkciji, vec i view-u koji se renderuje (posts/edit, update, destroy) - bice dostupan kao lokalna promenljiva
+			// if it is, pass the vinyl that we found on to the next middleware function
+			res.locals.vinyl = vinyl; // salje se ne samo sledecoj funkciji, vec i view-u koji se renderuje (vinyls/edit, update, destroy) - bice dostupan kao lokalna promenljiva
 			return next();
 		}
 		// if not create a flash error message and redirect the user back to the previous page
@@ -48,7 +48,7 @@ const middleware = {
 
 	isValidPassword      : async (req, res, next) => {
 		const { user } = await User.authenticate()(req.user.username, req.body.currentPassword);
-
+		
 		if (user) {
 			// add user to res.locals
 			res.locals.user = user;
@@ -110,12 +110,12 @@ const middleware = {
 		if (req.file) await cloudinary.v2.uploader.destroy(req.file.public_id);
 	},
 
-	// create a async middleware method named searchAndFilterPosts
+	// create a async middleware method named searchAndFilterVinyls
 	async searchAndFilterVinyls(req, res, next) {
 		// pull keys from req.query (if there are any) and assign them
 		// to queryKeys variable as an array of string values
 		const queryKeys = Object.keys(req.query);
-		/*
+		/* 
 			check if queryKeys array has any values in it
 			if true then we know that req.query has properties
 			which means the user:
@@ -185,9 +185,9 @@ const middleware = {
 				/*
 				check individual min/max values and create a db query object for each
 				then push the object into the dbQueries array
-				min will search for all post documents with price
+				min will search for all vinyl documents with price
 				greater than or equal to ($gte) the min value
-				max will search for all post documents with price
+				max will search for all vinyl documents with price
 				less than or equal to ($lte) the min value
 				*/
 				if (price.min) dbQueries.push({ price: { $gte: price.min } });
@@ -201,7 +201,7 @@ const middleware = {
 			}
 
 			// pass database query to next middleware in route's middleware chain
-			// which is the postIndex method from /controllers/postsController.js
+			// which is the vinylIndex method from /controllers/vinylsController.js
 			res.locals.dbQuery = dbQueries.length ? { $and: dbQueries } : {};
 		}
 
@@ -209,27 +209,27 @@ const middleware = {
 		// this allows us to maintain the state of the searchAndFilter form
 		res.locals.query = req.query;
 
-		// build the paginateUrl for paginatePosts partial
+		// build the paginateUrl for paginateVinyls partial
 		// first remove 'page' string value from queryKeys array, if it exists
 		queryKeys.splice(queryKeys.indexOf('page'), 1);
 		/*
 		now check if queryKeys has any other values, if it does then we know the user submitted the search/filter form
-		if it doesn't then they are on /posts or a specific page from /posts, e.g., /posts?page=2
+		if it doesn't then they are on /vinyls or a specific page from /vinyls, e.g., /vinyls?page=2
 		we assign the delimiter based on whether or not the user submitted the search/filter form
 		e.g., if they submitted the search/filter form then we want page=N to come at the end of the query string
-		e.g., /posts?search=surfboard&page=N
+		e.g., /vinyls?search=surfboard&page=N
 		but if they didn't submit the search/filter form then we want it to be the first (and only) value in the query string,
 		which would mean it needs a ? delimiter/prefix
-		e.g., /posts?page=N
+		e.g., /vinyls?page=N
 		*N represents a whole number greater than 0, e.g., 1
 		*/
 		const delimiter = queryKeys.length ? '&' : '?';
-		// build the paginateUrl local variable to be used in the paginatePosts.ejs partial
+		// build the paginateUrl local variable to be used in the paginateVinyls.ejs partial
 		// do this by taking the originalUrl and replacing any match of ?page=N or &page=N with an empty string
 		// then append the proper delimiter and page= to the end
-		// the actual page number gets assigned in the paginatePosts.ejs partial
+		// the actual page number gets assigned in the paginateVinyls.ejs partial
 		res.locals.paginateUrl = req.originalUrl.replace(/(\?|\&)page=\d+/g, '') + `${delimiter}page=`;
-		// move to the next middleware (postIndex method)
+		// move to the next middleware (vinylIndex method)
 		next();
 	}
 };

@@ -26,7 +26,7 @@ module.exports = {
 	},
 
 	// Vinyls New
-	vinylsNew(req, res, next) {
+	vinylNew(req, res, next) {
 		res.render('vinyls/new');
 	},
 
@@ -34,7 +34,7 @@ module.exports = {
 	async vinylCreate(req, res, next) {
 		req.body.vinyl.images = [];
 		for (const file of req.files) {
-			req.body.vinyl.images.push({
+			req.body.vinyls.images.push({
 				url       : file.secure_url,
 				public_id : file.public_id
 			});
@@ -59,7 +59,7 @@ module.exports = {
 
 	// Vinyls Show
 	async vinylShow(req, res, next) {
-		let vinyl = await (await Vinyl.findById(req.params.id)).populate({
+		let vinyl = await Vinyl.findById(req.params.id).populate({
 			path     : 'reviews',
 			options  : { sort: { _id: -1 } }, // newest ones at the top
 			populate : {
